@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from tkinter import filedialog
 
 
 
@@ -12,7 +13,10 @@ class MainWindow(ctk.CTk):
         
         # Appearance
         ctk.set_appearance_mode("dark")
-        ctk.set_default_color_theme("dark-blue")   
+        ctk.set_default_color_theme("dark-blue") 
+
+        # Path of selected PDF file  
+        self.selected_pdf = None
 
         self.setup_ui()
 
@@ -37,10 +41,27 @@ class MainWindow(ctk.CTk):
         )
         self.select_pdf_button.pack(pady=20)
 
-    def select_pdf(self):
-        # Placeholder for PDF selection logic
-        print("Select PDF button clicked")
 
+        # Selected file label
+        self.file_label = ctk.CTkLabel(
+            self,
+            text="No PDF selected",
+            font=ctk.CTkFont("Arial", size=14)
+        )
+        self.file_label.pack(pady=10)
+
+
+
+    def select_pdf(self):
+        file_path = filedialog.askopenfilename(
+            title="Select PDF File",
+            filetypes=[("PDF Files", "*.pdf")]
+        )
+        
+        if file_path:
+            self.selected_pdf = file_path
+            self.file_label.configure(text=f"Selected: {file_path}")
+            print(f"Selected PDF: {file_path}")
 
 
 
