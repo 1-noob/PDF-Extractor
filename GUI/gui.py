@@ -1,6 +1,8 @@
 import customtkinter as ctk
 from tkinter import filedialog
 import os
+from pdf_copy import extract_pages
+from GUI.dialog import StatusDialog
 
 
 
@@ -214,7 +216,7 @@ class MainWindow(ctk.CTk):
             text="Extract Pages",
             font=ctk.CTkFont("Arial", size=16),
             width=150,
-            command=self.extract_pages
+            command=self.handle_extract
         )
 
         self.extract_button.grid(
@@ -236,8 +238,20 @@ class MainWindow(ctk.CTk):
             self.file_label.configure(text=f"Selected: {self.file_name}")
             print(f"Selected PDF: {self.file_name}")
 
-    def extract_pages(self):
-        print("Extracting pages...")
+    def handle_extract(self):
+        self.start_page = int(self.start_entry.get())
+        self.end_page = int(self.end_entry.get())
+
+        try:
+            extract_pages(
+                self.selected_pdf, 
+                self.output_pdf, 
+                self.start_page, 
+                self.end_page
+            )
+            StatusDialog.show_success("Pages extracted successfully!")
+        except Exception as e:
+            StatusDialog.show_error(f"An error occurred: {str(e)}")
 
     def select_output_location(self):
         self.output_pdf = filedialog.asksaveasfilename(
