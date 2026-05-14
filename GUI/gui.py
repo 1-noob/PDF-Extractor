@@ -11,6 +11,7 @@ class MainWindow(ctk.CTk):
 
         self.title("Main Window")
         self.geometry("800x450")
+        self.resizable(False, False)
         
         # Appearance
         ctk.set_appearance_mode("dark")
@@ -25,33 +26,159 @@ class MainWindow(ctk.CTk):
     
     def setup_ui(self):
 
+        # Main Container
+        self.main_frame = ctk.CTkFrame(self)
+        self.main_frame.pack(
+            fill="both", 
+            expand=True,
+            padx=30,
+            pady=30
+        )
+
+        # Header Section
         self.title_label = ctk.CTkLabel(
-            self,
+            self.main_frame,
             text="PDF Extractor", 
             font=ctk.CTkFont("Arial", size=28, weight="bold")
         )
 
-        self.title_label.pack(pady=40)
+        self.title_label.grid(
+            row=0, 
+            column=0,  
+            sticky="w"
+        )
+
+        self.subtitle_label = ctk.CTkLabel(
+            self.main_frame,
+            text="Extract selected pages into a new PDF",
+            font=ctk.CTkFont("Arial", size=16)
+        )
+        self.subtitle_label.grid(
+            row=1, 
+            column=0,  
+            sticky="w",
+            pady=(0, 25)
+        )
 
 
-        # Select PDF Button
+        # PDF Selection Section
+        self.pdf_selection_frame = ctk.CTkFrame(self.main_frame)
+        self.pdf_selection_frame.grid(
+            row=2, 
+            column=0, 
+            sticky="ew",
+            pady=10
+        )
+
+        self.pdf_selection_frame.columnconfigure(0, weight=1)
+
         self.select_pdf_button = ctk.CTkButton(
-            self,
-            text="Select PDF",
+            self.pdf_selection_frame,
+            text="Choose PDF",
             font=ctk.CTkFont("Arial", size=16),
+            width=150,
             command=self.select_pdf
         )
-        self.select_pdf_button.pack(pady=20)
 
+        self.select_pdf_button.grid(
+            row=0, 
+            column=0, 
+            padx = 20,
+            pady = (20, 10),
+            sticky="w"
+        )
 
         # Selected file label
         self.file_label = ctk.CTkLabel(
-            self,
+            self.pdf_selection_frame,
             text="No PDF selected",
             font=ctk.CTkFont("Arial", size=14)
         )
-        self.file_label.pack(pady=10)
 
+        self.file_label.grid(
+            row=1, 
+            column=0, 
+            padx = 20,
+            pady = (0, 20),
+            sticky="w"
+        )
+
+
+        # Page Range Section
+        self.page_section = ctk.CTkFrame(self.main_frame)
+        self.page_section.grid(
+            row=3, 
+            column=0, 
+            sticky="ew",
+            pady=10
+        )
+
+        self.start_label = ctk.CTkLabel(
+            self.page_section,
+            text="Start Page:"
+        )
+
+        self.start_label.grid(
+            row=0, 
+            column=0, 
+            padx=(20, 10),
+            pady= 20,
+            sticky="w"
+        )
+
+        self.start_entry = ctk.CTkEntry(
+            self.page_section,
+            width=120
+        )
+
+        self.start_entry.grid(
+            row=0, 
+            column=1, 
+            pady= 20,
+            sticky="w"
+        )
+
+        self.end_label = ctk.CTkLabel(
+            self.page_section,
+            text="End Page:"
+        )
+
+        self.end_label.grid(
+            row=0, 
+            column=2, 
+            padx=(40, 10),
+            pady= 20,
+            sticky="w"
+        )
+
+        self.end_entry = ctk.CTkEntry(
+            self.page_section,
+            width=120
+        )
+
+        self.end_entry.grid(
+            row=0, 
+            column=3, 
+            pady= 20,
+            sticky="w"
+        )
+
+
+        # Extract Button
+        self.extract_button = ctk.CTkButton(
+            self.main_frame,
+            text="Extract Pages",
+            font=ctk.CTkFont("Arial", size=16),
+            width=150,
+            command=self.extract_pages
+        )
+
+        self.extract_button.grid(
+            row=4,
+            column=0,
+            sticky="ew",
+            pady=(25, 0)
+        )
 
 
     def select_pdf(self):
@@ -64,6 +191,9 @@ class MainWindow(ctk.CTk):
             self.file_name = os.path.basename(self.selected_pdf)
             self.file_label.configure(text=f"Selected: {self.file_name}")
             print(f"Selected PDF: {self.file_name}")
+
+    def extract_pages(self):
+        print("Extracting pages...")
 
 
 
