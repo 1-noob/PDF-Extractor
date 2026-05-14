@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkinter import filedialog
+import os
 
 
 
@@ -17,6 +18,7 @@ class MainWindow(ctk.CTk):
 
         # Path of selected PDF file  
         self.selected_pdf = None
+        self.file_name = None
 
         self.setup_ui()
 
@@ -53,15 +55,15 @@ class MainWindow(ctk.CTk):
 
 
     def select_pdf(self):
-        file_path = filedialog.askopenfilename(
+        self.selected_pdf = filedialog.askopenfilename(
             title="Select PDF File",
             filetypes=[("PDF Files", "*.pdf")]
         )
-        
-        if file_path:
-            self.selected_pdf = file_path
-            self.file_label.configure(text=f"Selected: {file_path}")
-            print(f"Selected PDF: {file_path}")
+
+        if self.selected_pdf:
+            self.file_name = os.path.basename(self.selected_pdf)
+            self.file_label.configure(text=f"Selected: {self.file_name}")
+            print(f"Selected PDF: {self.file_name}")
 
 
 
