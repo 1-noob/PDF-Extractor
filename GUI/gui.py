@@ -9,8 +9,8 @@ class MainWindow(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("Main Window")
-        self.geometry("800x450")
+        self.title("PDF Extractor")
+        self.geometry("510x550")
         self.resizable(False, False)
         
         # Appearance
@@ -20,6 +20,10 @@ class MainWindow(ctk.CTk):
         # Path of selected PDF file  
         self.selected_pdf = None
         self.file_name = None
+
+        # Output files
+        self.output_pdf = None
+        self.output_file_name = None
 
         self.setup_ui()
 
@@ -164,6 +168,46 @@ class MainWindow(ctk.CTk):
         )
 
 
+        # Output file section
+        self.output_section = ctk.CTkFrame(self.main_frame)
+
+        self.output_section.grid(
+            row=4, 
+            column=0, 
+            sticky="ew",
+            pady=10
+        )
+
+        self.choose_output_button = ctk.CTkButton(
+            self.output_section,
+            text="Choose Output Location",
+            font=ctk.CTkFont("Arial", size=16),
+            width=200,
+            command=self.select_output_location
+        )
+
+        self.choose_output_button.grid(
+            row=0,
+            column=0,
+            padx=20,
+            pady=20
+        )
+
+        self.output_label = ctk.CTkLabel(
+            self.output_section,
+            text="No output location selected",
+            font=ctk.CTkFont("Arial", size=14)
+        )
+
+        self.output_label.grid(
+            row=1,
+            column=0,
+            padx=20,
+            pady=(0, 20),
+            sticky="w"
+        )
+
+
         # Extract Button
         self.extract_button = ctk.CTkButton(
             self.main_frame,
@@ -174,7 +218,7 @@ class MainWindow(ctk.CTk):
         )
 
         self.extract_button.grid(
-            row=4,
+            row=5,
             column=0,
             sticky="ew",
             pady=(25, 0)
@@ -194,6 +238,17 @@ class MainWindow(ctk.CTk):
 
     def extract_pages(self):
         print("Extracting pages...")
+
+    def select_output_location(self):
+        self.output_pdf = filedialog.asksaveasfilename(
+            title="Save Extracted PDF",
+            defaultextension=".pdf",
+            filetypes=[("PDF Files", "*.pdf")]
+        )
+
+        if self.output_pdf:
+            self.output_file_name = os.path.basename(self.output_pdf)
+            self.output_label.configure(text=f"Output: {self.output_file_name}")
 
 
 
