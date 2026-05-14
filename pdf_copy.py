@@ -1,4 +1,5 @@
 from pypdf import PdfReader, PdfWriter
+from exceptions import PdfExtractorError
 
 
 
@@ -11,7 +12,7 @@ def extract_pages(input_pdf, output_pdf, start_page, end_page):
 
     # Validate page numbers
     if start_page < 1 or end_page > len(reader.pages) or start_page > end_page:
-        raise ValueError("Invalid page numbers.")
+        raise PdfExtractorError("Invalid page range specified.")
     
     # Copy pages
     for page_num in range(start_page - 1, end_page):
