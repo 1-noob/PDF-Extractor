@@ -1,5 +1,6 @@
 from pypdf import PdfReader, PdfWriter
 from exceptions import PdfExtractorError
+from models import ExtractionResult
 
 
 
@@ -22,7 +23,12 @@ def extract_pages(input_pdf, output_pdf, start_page, end_page):
     with open(output_pdf, 'wb') as output_file:
         writer.write(output_file)
 
-    print ("New Pdf created!")
+    return ExtractionResult(
+        output_pdf_name=output_pdf, 
+        number_of_pages=end_page - start_page + 1, 
+        message="Pages extracted successfully."
+    )
+    
 
 
 if __name__ == "__main__":
@@ -32,4 +38,9 @@ if __name__ == "__main__":
 
     output_pdf = r"C:\Users\Shiv\dev\PDF-Extractor\new_pdf.pdf"
 
-    extract_pages(input_pdf, output_pdf, 11, 18)
+    try:
+        result = extract_pages(input_pdf, output_pdf, 11, 18)
+        print(result.message)
+    
+    except PdfExtractorError as e:
+        print(f"Error: {e}")
